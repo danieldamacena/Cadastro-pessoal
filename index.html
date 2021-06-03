@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cadastro pessoal</title>
+    <script>
+        function carregaEndereco() {
+            cep = document.getElementById("cep").value;
+            if (cep.length != 8) {
+                alert("CEP precisa ter 8 números");
+                return;
+            }
+
+            url = `https://viacep.com.br/ws/${cep}/json/`;
+            fetch(url)
+                .then(async (res) => {
+                    endereco = await res.json()
+                    if (endereco.erro) {
+                        alert("Número de CEP inválido");
+                        document.getElementById("cep").focus();
+                        return;
+                    }
+
+                    document.getElementById("endereco").value = endereco.logradouro;
+                    document.getElementById("bairro").value = endereco.bairro;
+                    document.getElementById("cidade").value = endereco.localidade;
+                    document.getElementById("estado").value = endereco.uf;
+                })
+                .catch(() => {
+                    alert("Algo deu errado com seu CEP");
+                    document.getElementById("cep").focus();
+                });
+        }
+        function sucesso() {
+            window.alert("Os seus dados foram enviados com sucesso!");
+        }
+    </script>
+    <style>
+        body {
+            background-color: rgb(239, 233, 229);
+            color: rgb(37, 34, 32);
+            font-family: Calibri;
+        }
+
+        p {
+            font-size: 16px;
+        }
+
+        label {
+            display: inline-block;
+            width: 250px;
+            font-size: 16px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Seja bem vindo ao cadastro pessoal!</h1>
+    <h2>Agradecemos o seu interesse em cadastrar-se no nosso sistema!</h2>
+    <p>
+        Preencha todos os campos obrigatórios, caso contrário os dados do cadastro
+        não serão submetidos.
+    </p>
+
+    <div>
+        <form onsubmit="sucesso()">
+            <div>
+                <label for="nome">Nome completo</label>
+                <input type="text" required="" id="nome" />
+            </div>
+            <div>
+                <label for="cpf">CPF. Digite apenas números.</label>
+                <input id="cpf" required="numbers" maxlength="11" pattern="[0-9]+$" />
+            </div>
+            <div>
+                <label for="rg">Número do RG. Digite apenas números.</label>
+                <input type="text" maxlenght="" 14" id="rg">
+            </div>
+            <div>
+                <label for="sexo">Selecione o seu sexo</label>
+                <select id="sexo">
+                    <option value="f">Feminino</option>
+                    <option value="m">Masculino</option>
+                </select>
+            </div>
+            <div>
+                <label for="cep">CEP. Digite apenas números. Endereço, bairro, cidade e estado serão
+                    preenchidos automaticamente</label>
+                <input type="text" required="numbers" id="cep"/>
+                <button type="button" onclick="carregaEndereco()">Insere endereço, bairro, cidade e Estado</button>
+            </div>
+            <div>
+                <label for="endereco">Endereço</label>
+                <input type="text" required="required" readonly id="endereco" />
+            </div>
+            <div>
+                <label for="numero">Número da casa ou apartamento. Digite apenas números.</label>
+                <input type="text" required="numbers" maxlenght="5" id="numero" />
+            </div>
+            <div>
+                <label for="bairro">Bairro</label>
+                <input type="text" id="bairro" readonly />
+            </div>
+            <div>
+                <label for="cidade">Cidade</label>
+                <input type="text" id="cidade" readonly />
+            </div>
+            <div>
+                <label for="estado">Estado</label>
+                <input type="text" id="estado" readonly />
+            </div>
+            <div>
+                <label for="fixo">Número do telefone fixo. Digite apenas números</label>
+                <input type="text" id="fixo" maxlength="11" pattern="\[0-9]{2}\ [0-9]{4,6}-[0-9]{3,4}$" />
+            </div>
+            <div>
+                <label for="cel">Número do celular. Digite apenas números.</label>
+                <input id="cel" type="text" required="numbers" maxlength="13"
+                    pattern="\[0-9]{2}\ [0-9]{4,6}-[0-9]{3,4}$" />
+            </div>
+            <div>
+                <input type="submit" id="cadastrar" value="Enviar dados" />
+            </div>
+        </form>
+    </div>
+</body>
+
+</html>
